@@ -22,5 +22,8 @@ jobs:
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven
       run: mvn verify
-      working-directory: MySchool
+      - name: Build with Maven
+		run: xvfb-run mvn verify
+	    working-directory: MySchool
+      
 
