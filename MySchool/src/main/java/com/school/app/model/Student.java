@@ -30,24 +30,28 @@ public class Student {
       this.name = name;
    }
 
-   public String toString() {
-      return "Student [id=" + this.id + ", name=" + this.name + "]";
-   }
+   @Override
+	public int hashCode() {
+		return Objects.hash(id, name);
+	}
 
-   public int hashCode() {
-      return Objects.hash(new Object[]{this.id, this.name});
-   }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Student other = (Student) obj;
+		return Objects.equals(id, other.id) && Objects.equals(name, other.name);
+	}
 
-   public boolean equals(Object obj) {
-      if (this == obj) {
-         return true;
-      } else if (obj == null) {
-         return false;
-      } else if (this.getClass() != obj.getClass()) {
-         return false;
-      } else {
-         Student other = (Student)obj;
-         return Objects.equals(this.id, other.id) && Objects.equals(this.name, other.name);
-      }
-   }
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", name=" + name + "]";
+	}
 }

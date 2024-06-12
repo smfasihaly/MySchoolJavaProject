@@ -14,6 +14,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+
 import java.awt.Insets;
 
 import javax.swing.DefaultListModel;
@@ -136,9 +138,13 @@ public class StudentSwingView extends JFrame implements StudentView {
 		txtName.addKeyListener(btnAddEnabler);
 
 		btnAdd = new JButton("Add");
-		btnAdd.addActionListener(
-				e -> schoolController.newStudent(new Student(txtId.getText(), txtName.getText()))
-				);
+		btnAdd.addActionListener(e -> new Thread(() -> {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+			}
+			schoolController.newStudent(new Student(txtId.getText(), txtName.getText()));
+		}).start());
 		btnAdd.setEnabled(false);
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
@@ -188,15 +194,15 @@ public class StudentSwingView extends JFrame implements StudentView {
 
 	@Override
 	public void showError(String message, Student student) {
-		lblErrorMessage.setText(message + ": " + student);
-
+		SwingUtilities.invokeLater(() -> lblErrorMessage.setText(message + ": " + student));
 	}
 
 	@Override
 	public void studentAdded(Student student) {
-		listStudentsModel.addElement(student);
-
-		resetErrorLabel();
+		SwingUtilities.invokeLater(() -> {
+			listStudentsModel.addElement(student);
+			resetErrorLabel();
+		});
 
 	}
 

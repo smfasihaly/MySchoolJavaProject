@@ -1,6 +1,7 @@
 package com.school.app.view.swing;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +28,9 @@ import com.school.app.model.Student;
 
 @RunWith(GUITestRunner.class)
 public class StudentSwingViewTest extends AssertJSwingJUnitTestCase {
-
+	
+	private static final int TIMEOUT = 5000;
+	
 	private FrameFixture window;
 	private StudentSwingView studentSwingView;
 
@@ -111,14 +114,14 @@ public class StudentSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testShowErrorShouldShowTheMessageInTheErrorLabel() {
 		Student student = new Student("1", "test1");
-		GuiActionRunner.execute(() -> studentSwingView.showError("error message", student));
+		studentSwingView.showError("error message", student);
 		window.label("errorMessageLabel").requireText("error message: " + student);
 	}
 
 	@Test
 	public void testStudentAddedShouldAddTheStudentToTheListAndResetTheErrorLabel() {
 		Student student = new Student("1", "test1");
-		GuiActionRunner.execute(() -> studentSwingView.studentAdded(new Student("1", "test1")));
+		studentSwingView.studentAdded(new Student("1", "test1"));
 		String[] listContents = window.list().contents();
 		assertThat(listContents).containsExactly(student.toString());
 		window.label("errorMessageLabel").requireText(" ");
@@ -148,7 +151,8 @@ public class StudentSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.textBox("idTextBox").enterText("1");
 		window.textBox("nameTextBox").enterText("test");
 		window.button(JButtonMatcher.withText("Add")).click();
-		verify(schoolController).newStudent(new Student("1", "test"));
+		verify(schoolController, timeout(TIMEOUT))
+		.newStudent(new Student("1", "test"));
 	}
 
 	@Test
