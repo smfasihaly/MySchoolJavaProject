@@ -19,7 +19,7 @@ public class SchoolController {
 		this.studentView.showAllStudents(students);
 	}
 
-	public void newStudent(Student student) {
+	public synchronized void newStudent(Student student) {
 		Student existingStudent = this.studentRepository.findById(student.getId());
 		if (existingStudent != null) {
 			this.studentView.showError("Already existing student with id " + student.getId(), existingStudent);
@@ -29,13 +29,17 @@ public class SchoolController {
 		}
 	}
 
+	int i = 0;
+
 	public void deleteStudent(Student studentToDelete) {
 		Student existingStudent = this.studentRepository.findById(studentToDelete.getId());
 		if (existingStudent == null) {
 			this.studentView.showError("No existing student with id " + studentToDelete.getId(), studentToDelete);
+
 		} else {
 			this.studentRepository.delete(studentToDelete.getId());
 			this.studentView.studentRemoved(studentToDelete);
+
 		}
 	}
 }

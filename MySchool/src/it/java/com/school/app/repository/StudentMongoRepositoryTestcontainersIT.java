@@ -5,6 +5,10 @@ import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.school.app.model.Student;
+
+import static com.school.app.repository.StudentMongoRepository.SCHOOL_DB_NAME;
+import static com.school.app.repository.StudentMongoRepository.STUDENT_COLLECTION_NAME;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -27,9 +31,9 @@ public class StudentMongoRepositoryTestcontainersIT {
    public void setup() {
       this.client = new MongoClient(new ServerAddress(mongo.getHost(), mongo.getFirstMappedPort()));
       this.studentRepository = new StudentMongoRepository(this.client);
-      MongoDatabase database = this.client.getDatabase("school");
-      database.drop();
-      this.studentCollection = database.getCollection("student");
+		MongoDatabase database = client.getDatabase(SCHOOL_DB_NAME);
+		database.drop();
+		this.studentCollection = database.getCollection(STUDENT_COLLECTION_NAME);
    }
 
    @After

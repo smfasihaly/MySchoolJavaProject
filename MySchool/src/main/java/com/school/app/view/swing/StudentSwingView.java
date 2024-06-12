@@ -139,10 +139,7 @@ public class StudentSwingView extends JFrame implements StudentView {
 
 		btnAdd = new JButton("Add");
 		btnAdd.addActionListener(e -> new Thread(() -> {
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-			}
+
 			schoolController.newStudent(new Student(txtId.getText(), txtName.getText()));
 		}).start());
 		btnAdd.setEnabled(false);
