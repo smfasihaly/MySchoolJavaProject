@@ -1,19 +1,20 @@
 package com.school.app.controller;
 
-import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
-import com.school.app.model.Student;
-import com.school.app.repository.StudentMongoRepository;
-import com.school.app.repository.StudentRepository;
-import com.school.app.view.StudentView;
 import java.util.Arrays;
-import java.util.Iterator;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
+import com.school.app.model.Student;
+import com.school.app.repository.StudentMongoRepository;
+import com.school.app.repository.StudentRepository;
+import com.school.app.view.StudentView;
 
 public class SchoolControllerIT {
 	@Mock

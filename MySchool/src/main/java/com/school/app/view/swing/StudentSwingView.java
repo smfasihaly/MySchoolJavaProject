@@ -1,31 +1,27 @@
 package com.school.app.view.swing;
 
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 
 import com.school.app.controller.SchoolController;
 import com.school.app.model.Student;
 import com.school.app.view.StudentView;
-
-import java.awt.GridBagLayout;
-import javax.swing.JLabel;
-import java.awt.GridBagConstraints;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-
-import java.awt.Insets;
-
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.Collection;
-import java.util.List;
 
 public class StudentSwingView extends JFrame implements StudentView {
 
@@ -50,7 +46,6 @@ public class StudentSwingView extends JFrame implements StudentView {
 	private JScrollPane scrollPane;
 	private JButton btnDeleteSelected;
 	private JLabel lblErrorMessage;
-	private Collection<Student> students;
 
 	/**
 	 * Launch the application.

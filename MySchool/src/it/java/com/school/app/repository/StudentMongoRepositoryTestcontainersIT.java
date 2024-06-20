@@ -21,61 +21,62 @@ import org.junit.Test;
 import org.testcontainers.containers.MongoDBContainer;
 
 public class StudentMongoRepositoryTestcontainersIT {
-   @ClassRule
-   public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
-   private MongoClient client;
-   private StudentRepository studentRepository;
-   private MongoCollection<Document> studentCollection;
+	@ClassRule
+	public static final MongoDBContainer mongo = new MongoDBContainer("mongo:4.4.3");
+	private MongoClient client;
+	private StudentRepository studentRepository;
+	private MongoCollection<Document> studentCollection;
 
-   @Before
-   public void setup() {
-      this.client = new MongoClient(new ServerAddress(mongo.getHost(), mongo.getFirstMappedPort()));
-      this.studentRepository = new StudentMongoRepository(this.client);
+	@Before
+	public void setup() {
+		this.client = new MongoClient(new ServerAddress(mongo.getHost(), mongo.getFirstMappedPort()));
+		this.studentRepository = new StudentMongoRepository(this.client);
 		MongoDatabase database = client.getDatabase(SCHOOL_DB_NAME);
 		database.drop();
 		this.studentCollection = database.getCollection(STUDENT_COLLECTION_NAME);
-   }
+	}
 
-   @After
-   public void tearDown() {
-      this.client.close();
-   }
+	@After
+	public void tearDown() {
+		this.client.close();
+	}
 
-   @Test
-   public void testFindAll() {
-      this.addTestStudentToDatabase("1", "test1");
-      this.addTestStudentToDatabase("2", "test2");
-      Assertions.assertThat(this.studentRepository.findAll()).containsExactly(new Student[]{new Student("1", "test1"), new Student("2", "test2")});
-   }
+	@Test
+	public void testFindAll() {
+		this.addTestStudentToDatabase("1", "test1");
+		this.addTestStudentToDatabase("2", "test2");
+		Assertions.assertThat(this.studentRepository.findAll())
+				.containsExactly(new Student[] { new Student("1", "test1"), new Student("2", "test2") });
+	}
 
-   @Test
-   public void testFindById() {
-      this.addTestStudentToDatabase("1", "test1");
-      this.addTestStudentToDatabase("2", "test2");
-      Assertions.assertThat(this.studentRepository.findById("2")).isEqualTo(new Student("2", "test2"));
-   }
+	@Test
+	public void testFindById() {
+		this.addTestStudentToDatabase("1", "test1");
+		this.addTestStudentToDatabase("2", "test2");
+		Assertions.assertThat(this.studentRepository.findById("2")).isEqualTo(new Student("2", "test2"));
+	}
 
-   @Test
-   public void testSave() {
-      Student student = new Student("1", "added student");
-      this.studentRepository.save(student);
-      Assertions.assertThat(this.readAllStudentsFromDatabase()).containsExactly(new Student[]{student});
-   }
+	@Test
+	public void testSave() {
+		Student student = new Student("1", "added student");
+		this.studentRepository.save(student);
+		Assertions.assertThat(this.readAllStudentsFromDatabase()).containsExactly(new Student[] { student });
+	}
 
-   @Test
-   public void testDelete() {
-      this.addTestStudentToDatabase("1", "test1");
-      this.studentRepository.delete("1");
-      Assertions.assertThat(this.readAllStudentsFromDatabase()).isEmpty();
-   }
+	@Test
+	public void testDelete() {
+		this.addTestStudentToDatabase("1", "test1");
+		this.studentRepository.delete("1");
+		Assertions.assertThat(this.readAllStudentsFromDatabase()).isEmpty();
+	}
 
-   private List<Student> readAllStudentsFromDatabase() {
-      return (List)StreamSupport.stream(this.studentCollection.find().spliterator(), false).map((d) -> {
-         return new Student("" + d.get("id"), "" + d.get("name"));
-      }).collect(Collectors.toList());
-   }
+	private List<Student> readAllStudentsFromDatabase() {
+		return StreamSupport.stream(this.studentCollection.find().spliterator(), false)
+				.map(d -> new Student("" + d.get("id"), "" + d.get("name"))).collect(Collectors.toList());
 
-   private void addTestStudentToDatabase(String id, String name) {
-      this.studentCollection.insertOne((new Document()).append("id", id).append("name", name));
-   }
+	}
+
+	private void addTestStudentToDatabase(String id, String name) {
+		this.studentCollection.insertOne((new Document()).append("id", id).append("name", name));
+	}
 }

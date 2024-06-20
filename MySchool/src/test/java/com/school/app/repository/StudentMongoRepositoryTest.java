@@ -1,16 +1,13 @@
 package com.school.app.repository;
 
-import com.mongodb.MongoClient;
-import com.mongodb.ServerAddress;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.school.app.model.Student;
-import de.bwaldvogel.mongo.MongoServer;
-import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
+import static com.school.app.repository.StudentMongoRepository.SCHOOL_DB_NAME;
+import static com.school.app.repository.StudentMongoRepository.STUDENT_COLLECTION_NAME;
+
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.AfterClass;
@@ -18,8 +15,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static com.school.app.repository.StudentMongoRepository.SCHOOL_DB_NAME;
-import static com.school.app.repository.StudentMongoRepository.STUDENT_COLLECTION_NAME;
+import com.mongodb.MongoClient;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.school.app.model.Student;
+
+import de.bwaldvogel.mongo.MongoServer;
+import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
 public class StudentMongoRepositoryTest {
 	private static MongoServer server;
@@ -88,9 +91,10 @@ public class StudentMongoRepositoryTest {
 	}
 
 	private List<Student> readAllStudentsFromDatabase() {
-		return (List) StreamSupport.stream(this.studentCollection.find().spliterator(), false).map((d) -> {
-			return new Student("" + d.get("id"), "" + d.get("name"));
-		}).collect(Collectors.toList());
+		return StreamSupport.
+		stream(studentCollection.find().spliterator(), false)
+			.map(d -> new Student(""+d.get("id"), ""+d.get("name")))
+			.collect(Collectors.toList());
 	}
 
 	private void addTestStudentToDatabase(String id, String name) {
